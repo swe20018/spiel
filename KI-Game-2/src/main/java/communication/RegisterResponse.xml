@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ResponseEnvelope>
-	<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:type="gameState">
-		<exceptionName>exceptionName</exceptionName>
-		<exceptionMessage>exceptionMessage</exceptionMessage>
-		<state>OK</state>
+<ResponseEnvelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="RegisterResponse.xsd">
+	<exceptionName>exceptionName</exceptionName>
+	<exceptionMessage>exceptionMessage</exceptionMessage>
+	<state>OK</state>
+	<data>
+		<uniquePlayerIdentifier>1231222</uniquePlayerIdentifier>
 	</data>
 </ResponseEnvelope>
