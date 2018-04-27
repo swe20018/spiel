@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResponseEnvelope>
+	<exceptionName />
+	<exceptionMessage />
+	<state>OK</state>
+	<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:type="gameState">
+		<players>
+			<player>
+				<uniquePlayerID>6c4362b5-5636-41b8-aaae-6daba4aea91b
+				</uniquePlayerID>
+				<firstName>Max</firstName>
+				<lastName>Mustermann</lastName>
+				<studentID>a123456789</studentID>
+				<state>ShouldActNext</state>
+				<collectedTreasure>false</collectedTreasure>
+			</player>
+			<player>
+				<uniquePlayerID>2e31d1c8-e91d-4f55-88ad-ffcd1dae48f0
+				</uniquePlayerID>
+				<firstName>Maxin</firstName>
+				<lastName>Musterfrau</lastName>
+				<studentID>a987654321</studentID>
+				<state>ShouldWait</state>
+				<collectedTreasure>false</collectedTreasure>
+			</player>
+		</players>
+		<map>
+			<mapNodes>
+				<mapNode>
+					<playerPositionState>NoPlayerPresent</playerPositionState>
+					<terrain>Water</terrain>
+					<tresureState>NoOrUnknownTresureState</tresureState>
+					<fortState>NoOrUnknownFortState</fortState>
+					<X>2</X>
+					<Y>1</Y>
+				</mapNode>
+				<mapNode>
+					<playerPositionState>NoPlayerPresent</playerPositionState>
+					<terrain>Grass</terrain>
+					<tresureState>NoOrUnknownTresureState</tresureState>
+					<fortState>NoOrUnknownFortState</fortState>
+					<X>6</X>
+					<Y>4</Y>
+				</mapNode>
+			</mapNodes>
+		</map>
+		<gameStateId>430bdf29-5e61-4950-8408-ac40e9fb1176</gameStateId>
+	</data>
+</ResponseEnvelope>
