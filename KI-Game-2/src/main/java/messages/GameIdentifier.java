@@ -6,7 +6,7 @@
 //
 
 
-package communication;
+package messages;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -42,7 +42,16 @@ import javax.xml.bind.annotation.XmlType;
 public class GameIdentifier {
 
     @XmlElement(name = "UniqueGameID", required = true)
-    protected String uniqueGameID;
+    
+    private String uniqueGameID;
+    
+	public GameIdentifier() {
+		this.uniqueGameID = "";
+	}
+	
+	public GameIdentifier(String uniqueGameID) {
+		this.uniqueGameID = uniqueGameID;
+	}
 
     /**
      * Ruft den Wert der uniqueGameID-Eigenschaft ab.
@@ -67,5 +76,4 @@ public class GameIdentifier {
     public void setUniqueGameID(String value) {
         this.uniqueGameID = value;
     }
-
 }

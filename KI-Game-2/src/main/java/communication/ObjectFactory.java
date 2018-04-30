@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
+import messages.ResponseEnvelope;
+
 
 /**
  * This object contains factory methods for each 

@@ -5,14 +5,12 @@
 // Generiert: 2018.04.15 um 05:31:09 PM CEST 
 //
 
-
-package communication;
+package messages;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
 
 /**
  * <p>Java-Klasse für uniquePlayerIdentifier complex type.
@@ -34,36 +32,40 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "uniquePlayerIdentifier", propOrder = {
-    "uniquePlayerID"
-})
+@XmlType(name = "uniquePlayerIdentifier", propOrder = { "uniquePlayerID" })
 public class UniquePlayerIdentifier {
 
-    @XmlElement(required = true)
-    protected String uniquePlayerID;
+	@XmlElement(required = true)
 
-    /**
-     * Ruft den Wert der uniquePlayerID-Eigenschaft ab.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUniquePlayerID() {
-        return uniquePlayerID;
-    }
+	private String uniquePlayerID;
 
-    /**
-     * Legt den Wert der uniquePlayerID-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setUniquePlayerID(String value) {
-        this.uniquePlayerID = value;
-    }
+	public UniquePlayerIdentifier() {
+    		this.uniquePlayerID = "";
+    	}
+
+	public UniquePlayerIdentifier(String uniquePlayerID) {
+    		this.uniquePlayerID = uniquePlayerID;
+    	}
+
+	/**
+	 * Ruft den Wert der uniquePlayerID-Eigenschaft ab.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getUniquePlayerID() {
+		return uniquePlayerID;
+	}
+
+	/**
+	 * Legt den Wert der uniquePlayerID-Eigenschaft fest.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setUniquePlayerID(String value) {
+		this.uniquePlayerID = value;
+	}
 
 }

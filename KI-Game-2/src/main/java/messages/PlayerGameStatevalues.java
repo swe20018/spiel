@@ -6,7 +6,7 @@
 //
 
 
-package communication;
+package messages;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;

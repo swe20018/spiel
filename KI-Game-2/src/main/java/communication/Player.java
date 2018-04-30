@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
+import messages.PlayerGameStatevalues;
+
 
 /**
  * <p>Java-Klasse für anonymous complex type.
