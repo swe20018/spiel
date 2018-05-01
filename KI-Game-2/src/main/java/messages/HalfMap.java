@@ -6,7 +6,7 @@
 //
 
 
-package communication;
+package messages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-
 
 /**
  * <p>Java-Klasse für anonymous complex type.
@@ -75,12 +74,14 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
+
+@XmlRootElement(name = "halfMap")
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "", propOrder = {
     "uniquePlayerID",
     "newMapNodes"
 })
-@XmlRootElement(name = "halfMap")
+
 public class HalfMap {
 
     @XmlElement(required = true)

@@ -6,7 +6,7 @@
 //
 
 
-package communication;
+package messages;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -38,7 +38,10 @@ public enum Terraintype {
     @XmlEnumValue("Water")
     WATER("Water"),
     @XmlEnumValue("Mountain")
-    MOUNTAIN("Mountain");
+    MOUNTAIN("Mountain"),
+    @XmlEnumValue("Nothing")
+    EMPTY("Nothing");
+    
     private final String value;
 
     Terraintype(String v) {

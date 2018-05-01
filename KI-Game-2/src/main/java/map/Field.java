@@ -1,14 +1,16 @@
 package map;
 
+import messages.Terraintype;
+
 public class Field {
 
-	boolean hasAvatar[];
-	boolean hasCastle[];
-	boolean hasTreasure[];
-	boolean hasMountainStepUp[];
-	boolean hasMountainStepDown[];
-	boolean hasBeenVisited[];
-	int type;	/* meadow, water, mountain */
+	boolean hasAvatar;		/* own Avatar */
+	boolean hasCastle;
+	boolean hasTreasure;
+	boolean hasBeenVisited;
+	boolean hasEnemy;		/* other Avatar, maybe helps to find other castle*/
+	
+	private Terraintype type;
 
 	public Field () {
 		initField();
@@ -16,9 +18,9 @@ public class Field {
 	
 	/**
 	 * 
-	 * @param type meadow, water, mountain
+	 * @param type grass, water, mountain
 	 */
-	public Field (int type) {
+	public Field (Terraintype type) {
 		
 		initField();
 		this.type = type;
@@ -26,23 +28,59 @@ public class Field {
 	
 	private void initField() {
 		
-		hasAvatar = new boolean[2];
-		hasCastle = new boolean[2];
-		hasTreasure = new boolean[2];
-		hasMountainStepUp = new boolean[2];
-		hasMountainStepDown = new boolean[2];
-		hasBeenVisited = new boolean[2];
-		type = 0;
-		
-		for (int id = 0 ; id < 2 ; id++) {
-			 hasAvatar[id] = false;
-			 hasCastle[id] = false;
-			 hasTreasure[id] = false;
-			 hasMountainStepUp[id] = false;
-			 hasMountainStepDown[id] = false;
-			 hasBeenVisited[id] = false;
-		}
+		hasAvatar = false;
+		hasCastle = false;
+		hasTreasure = false;
+		hasBeenVisited = false;
+		hasEnemy = false;
+		type = Terraintype.EMPTY;
 	}
+	
+	/* show content of the field */
+	
+	public String showField () {
+		
+		String info = "";
+		
+		switch (type) {
+		
+		case GRASS:
+			info += "G";
+			break;
+		case WATER:
+			info += "W";
+			break;
+		case MOUNTAIN:
+			info += "M";
+			break;
+		case EMPTY:
+			info += " ";
+			break;
+		}
+		
+		if (hasAvatar)
+			info += "A";
+		else
+			info += " ";
+		
+		if (hasCastle)
+			info += "C";
+		else
+			info += " ";
+		
+		if (hasTreasure)
+			info += "*";
+		else
+			info += " ";
+		
+		if (hasEnemy)
+			info += "E";
+		else
+			info += " ";
+		
+		return info;
+	}
+	
 	/**
 	 * 
 	 * @param position of the field
@@ -70,119 +108,88 @@ public class Field {
 	boolean isTreasureFound() {
 		return false;
 	}
-	/**
-	 * check, if treasure is at field
-	 *  
-	 * @param position of the field
-	 * @return true if field is okay
-	 */
-	boolean isCastleFound(int id) {
-		
-		return false;
-	}
 
 	/**
-	 * @author param id of avatar
 	 * @return if avatar is there
 	 */
-	public boolean hasAvatar(int id) {
-		return hasAvatar[id];
+	public boolean hasAvatar() {
+		return hasAvatar;
 	}
 
 	/**
 	 * @param id of avatar set to field
 	 */
-	public void setAvatar(int id) {
-		this.hasAvatar[id] = true;
+	public void setAvatar() {
+		this.hasAvatar = true;
 	}
 
 	/**
-	 * @param if of avatar
 	 * @return the hasCastle
 	 */
-	public boolean HasCastle(int id) {
-		return hasCastle[id];
+	public boolean HasCastle() {
+		return hasCastle;
 	}
 
 	/**
-	 * @param id of the avatar 
 	 * 
 	 */
-	public void setCastle(int id) {
-		this.hasCastle[id] = true;
+	public void setCastle() {
+		this.hasCastle = true;
 	}
 
 	/**
-	 * @param id of the avatar 
 	 * @return the hasTreasure
 	 */
-	public boolean hasTreasure(int id) {
-		return hasTreasure[id];
+	public boolean hasTreasure() {
+		return hasTreasure;
 	}
 
 	/**
 	 * @param id of the avatar 
 	 */
-	public void setTreasure(int id) {
-		this.hasTreasure[id] = true;
-	}
-
-	/**
-	 * @param id of the avatar 
-	 * @return the hasMountainStepUp
-	 */
-	public boolean hasMountainStepUp(int id) {
-		return hasMountainStepUp[id];
-	}
-
-	/**
-	 * @param id of the avatar 
-	 */
-	public void setMountainStepUp(int id) {
-		this.hasMountainStepUp[id] = true;
+	public void setTreasure() {
+		this.hasTreasure = true;
 	}
 
 	/**
 	 * @param id of the avatar 
 	 * @return the hasMountainStepDown
 	 */
-	public boolean hasMountainStepDown(int id) {
-		return hasMountainStepDown[id];
+	public boolean hasBeenVisited() {
+		return hasBeenVisited;
 	}
 
 	/**
-	 * @param id of the avatar 
 	 */
-	public void setMountainStepDown(int id) {
-		this.hasMountainStepDown[id] = true;
+	public void setBeenVisited() {
+		this.hasBeenVisited = true;
 	}
-
+	
 	/**
-	 * @param id of the avatar 
 	 * @return the hasMountainStepDown
 	 */
-	public boolean hasBeenVisited(int id) {
-		return hasBeenVisited[id];
+	public boolean hasEnemy() {
+		return hasEnemy;
 	}
 
 	/**
 	 * @param id of the avatar 
 	 */
-	public void setBeenVisited(int id) {
-		this.hasBeenVisited[id] = true;
+	public void setEnemy() {
+		this.hasEnemy = true;
 	}
 	
 	/**
 	 * @return the type
 	 */
-	public int getType() {
+	public Terraintype getType() {
 		return type;
 	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(int type) {
+	public void setType(Terraintype type) {
 		this.type = type;
 	}	
 }

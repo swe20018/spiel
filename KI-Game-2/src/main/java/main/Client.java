@@ -1,6 +1,9 @@
 package main;
 
 import java.net.URL;
+
+import org.junit.experimental.theories.Theories;
+
 import dataobjects.GameID;
 import dataobjects.PlayerID;
 import dataobjects.PlayerInformation;
@@ -50,15 +53,31 @@ public class Client {
 
 		GameID gameID = client.createNewGame();
 
-		System.out.println("GameID = " + gameID.getId());
-		
 		/* Get Player-ID - Register */
 		
 		PlayerID playerID = client.registerNewPlayer();
 
 		System.out.println("GameID = " + gameID.getId() + " PlayerID = " + playerID.getId());
-		System.exit(0);
 
+		/* Generate Map and regenerate, as long as it has errors */
+		
+		LocalMap map = new LocalMap();
+		
+		do {
+			
+			map.generateHalfMap();		
+		} while (false == map.checkLocalMap());
+		
+		map.showLocalMap();
+		
+		if (false == client.sendHalfMap(playerID.getId(), map)) {
+			
+			/* we have an error within the map, got disqualified */
+
+			System.exit(0);
+		}
+
+		
 		/* Wait for other Player - State */
 
 		while (playerState == PlayerGameStatevalues.SHOULD_WAIT) {
