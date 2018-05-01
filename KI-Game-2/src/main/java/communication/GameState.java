@@ -11,6 +11,7 @@ package communication;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -35,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "gameState", propOrder = {
     "players",
     "map",
@@ -43,10 +44,11 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class GameState {
 
-    @XmlElement(required = true)
+    @XmlElement(name="players", required = true)
     protected Players players;
+    @XmlElement(name="map")
     protected Map map;
-    @XmlElement(required = true)
+    @XmlElement(name="gameStateId", required = true)
     protected String gameStateId;
 
     /**

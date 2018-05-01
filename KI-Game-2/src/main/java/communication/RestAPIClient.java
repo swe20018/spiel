@@ -111,9 +111,35 @@ public class RestAPIClient {
 		}
 	}
 
-	/* check play state */
+	/**
+	 * get play state from server
+	 * param playID and map
+	 * Answer could include map information and player information
+	 * 
+	 * @return if there is an error got from Server
+	 */
 
-	public void checkPlayState() {
-		return;
+	public boolean checkPlayState(LocalMap map) throws Exception {
+		
+		URL checkPlayStateUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/state/"+ uniquePlayerID.getId());
+		RestTemplate restTemplate = new RestTemplate();
+
+		ResponseEnvelope<GameState> gameStateMessage = restTemplate.getForObject(checkPlayStateUrl.toURI(), ResponseEnvelope.class);
+		
+		if (gameStateMessage.getState() == ResponseState.OK) {
+
+			System.out.println (gameStateMessage.getData().gameStateId);
+			Players players = gameStateMessage.getData().getPlayers();
+			Player player1 = players.getPlayer().get(0);
+			System.out.println(player1.getLastName());
+			Player player2 = players.getPlayer().get(1);
+			System.out.println(player2.getLastName());
+			return true;
+		}
+		else {
+			System.out.println(gameStateMessage.getExceptionMessage());
+			System.out.println(gameStateMessage.getExceptionName());
+			return false;
+		}
 	}
 }

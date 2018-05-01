@@ -54,17 +54,18 @@ import messages.PlayerGameStatevalues;
 @XmlRootElement(name = "player")
 public class Player {
 
-    @XmlElement(required = true)
+    @XmlElement(name = "uniquePlayerID", required = true)
     protected String uniquePlayerID;
-    @XmlElement(required = true)
+    @XmlElement(name = "firstName", required = true)
     protected String firstName;
-    @XmlElement(required = true)
+    @XmlElement(name = "lastName", required = true)
     protected String lastName;
-    @XmlElement(required = true)
+    @XmlElement(name = "studentID", required = true)
     protected String studentID;
-    @XmlElement(required = true)
+    @XmlElement(name = "state", required = true)
     @XmlSchemaType(name = "string")
     protected PlayerGameStatevalues state;
+    @XmlElement(name = "collectedTreasure")
     protected boolean collectedTreasure;
 
     /**

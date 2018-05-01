@@ -9,7 +9,6 @@ import dataobjects.PlayerID;
 import dataobjects.PlayerInformation;
 
 import map.*;
-import movement.*;
 import messages.*;
 import communication.*;
 
@@ -43,50 +42,50 @@ public class Client {
 		case 1: /* got optional ServerUrl */
 			serverString = args[0];
 			break;
-		default: 
+		default:
 			showUsage();
 			System.exit(0);
 		}
 		client = new RestAPIClient(serverString);
-		
+
 		/* Get Game-ID - Register */
 
 		GameID gameID = client.createNewGame();
 
 		/* Get Player-ID - Register */
-		
+
 		PlayerID playerID = client.registerNewPlayer();
 
 		System.out.println("GameID = " + gameID.getId() + " PlayerID = " + playerID.getId());
 
 		/* Generate Map and regenerate, as long as it has errors */
-		
+
 		LocalMap map = new LocalMap();
-		
+
 		do {
-			
-			map.generateHalfMap();		
+
+			map.generateHalfMap();
 		} while (false == map.checkLocalMap());
-		
+
 		map.showLocalMap();
-		
-		if (false == client.sendHalfMap(playerID.getId(), map)) {
-			
-			/* we have an error within the map, got disqualified */
 
-			System.exit(0);
-		}
-
+		/* ignore response to sendhalfmap, will get ERROR in every situation */
 		
+		client.sendHalfMap(playerID.getId(), map);
+
 		/* Wait for other Player - State */
 
-		while (playerState == PlayerGameStatevalues.SHOULD_WAIT) {
+		while (true == client.checkPlayState(map)) {
 
-			/* Wait 0,4 s */
-			Thread.sleep(400);
+			System.exit(0);
+			if (playerState == PlayerGameStatevalues.SHOULD_WAIT) {
+
+				/* Wait 0,4 s */
+				Thread.sleep(400);
+			}
 		}
-		/* Generate half map and send - HalfMap */
 
+		
 		/* start playing */
 
 		while (running) {
