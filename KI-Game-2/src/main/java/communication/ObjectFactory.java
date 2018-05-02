@@ -13,6 +13,12 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
+import messages.GameState;
+import messages.Map;
+import messages.MapNode;
+import messages.MapNodes;
+import messages.Player;
+import messages.Players;
 import messages.ResponseEnvelope;
 
 

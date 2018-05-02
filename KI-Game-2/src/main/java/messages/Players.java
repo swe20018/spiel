@@ -6,8 +6,10 @@
 //
 
 
-package communication;
+package messages;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}mapNodes"/>
+ *         &lt;element ref="{}player" maxOccurs="2"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,36 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "mapNodes"
+    "player"
 })
-@XmlRootElement(name = "map")
-public class Map {
+@XmlRootElement(name = "players")
+public class Players {
 
     @XmlElement(required = true)
-    protected MapNodes mapNodes;
+    protected List<Player> player;
 
     /**
-     * Ruft den Wert der mapNodes-Eigenschaft ab.
+     * Gets the value of the player property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MapNodes }
-     *     
-     */
-    public MapNodes getMapNodes() {
-        return mapNodes;
-    }
-
-    /**
-     * Legt den Wert der mapNodes-Eigenschaft fest.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the player property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MapNodes }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPlayer().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Player }
+     * 
+     * 
      */
-    public void setMapNodes(MapNodes value) {
-        this.mapNodes = value;
+    public List<Player> getPlayer() {
+        if (player == null) {
+            player = new ArrayList<Player>();
+        }
+        return this.player;
     }
 
 }

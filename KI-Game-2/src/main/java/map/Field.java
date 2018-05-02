@@ -1,14 +1,15 @@
 package map;
 
-import messages.Terraintype;
+import communication.*;
+import messages.*;
 
 public class Field {
 
-	boolean hasAvatar;		/* own Avatar */
-	boolean hasCastle;
-	boolean hasTreasure;
+	private PlayerStatevalues	playerState;		/* own Avatar */
+	private FortStatevalues fortState;
+	private TresureStatevalues treasureState;
+	boolean hasEnemy;		/* other Avatars first occurence, maybe helps to find other castle*/
 	boolean hasBeenVisited;
-	boolean hasEnemy;		/* other Avatar, maybe helps to find other castle*/
 	
 	private Terraintype type;
 
@@ -28,9 +29,9 @@ public class Field {
 	
 	private void initField() {
 		
-		hasAvatar = false;
-		hasCastle = false;
-		hasTreasure = false;
+		playerState = PlayerStatevalues.NO_PLAYER_PRESENT;
+		fortState = FortStatevalues.NO_OR_UNKNOWN_FORT_STATE;
+		treasureState = TresureStatevalues.NO_OR_UNKNOWN_TRESURE_STATE;
 		hasBeenVisited = false;
 		hasEnemy = false;
 		type = Terraintype.EMPTY;
@@ -58,26 +59,42 @@ public class Field {
 			break;
 		}
 		
-		if (hasAvatar)
-			info += "A";
-		else
-			info += " ";
+		switch (playerState) {
 		
-		if (hasCastle)
-			info += "C";
-		else
-			info += " ";
-		
-		if (hasTreasure)
-			info += "*";
-		else
-			info += " ";
-		
-		if (hasEnemy)
+		case NO_PLAYER_PRESENT:
+			info += "  ";
+			break;
+		case BOTH_PLAYER_POSITION:
+			info += "ae";
+			break;
+		case ENEMY_PLAYER_POSITION:
+			info += " e";
+			break;
+		case MY_POSITION:
+			info += "a ";
+		}
+
+		switch (fortState) {
+		case ENEMY_FORT_PRESENT:
 			info += "E";
-		else
+			break;
+		case MY_FORT_PRESENT:
+			info += "A";
+			break;
+		case NO_OR_UNKNOWN_FORT_STATE:
 			info += " ";
+			break;
+		}
 		
+		switch (treasureState) {
+		case MY_TRESURE_IS_PLACED_HERE:
+			info += "*";
+			break;
+		case NO_OR_UNKNOWN_TRESURE_STATE:
+			info += " ";
+			break;
+		}
+	
 		return info;
 	}
 	
@@ -107,48 +124,6 @@ public class Field {
 	 */
 	boolean isTreasureFound() {
 		return false;
-	}
-
-	/**
-	 * @return if avatar is there
-	 */
-	public boolean hasAvatar() {
-		return hasAvatar;
-	}
-
-	/**
-	 * @param id of avatar set to field
-	 */
-	public void setAvatar() {
-		this.hasAvatar = true;
-	}
-
-	/**
-	 * @return the hasCastle
-	 */
-	public boolean HasCastle() {
-		return hasCastle;
-	}
-
-	/**
-	 * 
-	 */
-	public void setCastle() {
-		this.hasCastle = true;
-	}
-
-	/**
-	 * @return the hasTreasure
-	 */
-	public boolean hasTreasure() {
-		return hasTreasure;
-	}
-
-	/**
-	 * @param id of the avatar 
-	 */
-	public void setTreasure() {
-		this.hasTreasure = true;
 	}
 
 	/**
@@ -191,5 +166,64 @@ public class Field {
 	 */
 	public void setType(Terraintype type) {
 		this.type = type;
-	}	
+	}
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(TerrainStatevalues type) {
+		
+		switch (type) {
+		
+		case GRASS:
+			this.type = Terraintype.GRASS;
+			break;
+		case WATER:
+			this.type = Terraintype.WATER;
+			break;
+		case MOUNTAIN:
+			this.type = Terraintype.MOUNTAIN;
+			break;
+		}
+	}
+	/**
+	 * @return the playerState
+	 */
+	public PlayerStatevalues getPlayerState() {
+		return playerState;
+	}
+
+	/**
+	 * @param playerState the playerState to set
+	 */
+	public void setPlayerState(PlayerStatevalues playerState) {
+		this.playerState = playerState;
+	}
+
+	/**
+	 * @return the fortState
+	 */
+	public FortStatevalues getFortState() {
+		return fortState;
+	}
+
+	/**
+	 * @param fortState the fortState to set
+	 */
+	public void setFortState(FortStatevalues fortState) {
+		this.fortState = fortState;
+	}
+
+	/**
+	 * @return the treasureState
+	 */
+	public TresureStatevalues getTreasureState() {
+		return treasureState;
+	}
+
+	/**
+	 * @param treasureState the treasureState to set
+	 */
+	public void setTreasureState(TresureStatevalues treasureState) {
+		this.treasureState = treasureState;
+	}
 }

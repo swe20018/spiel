@@ -6,12 +6,13 @@
 //
 
 
-package communication;
+package messages;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -36,20 +37,22 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
+
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "gameState", propOrder = {
     "players",
     "map",
     "gameStateId"
 })
+@XmlSeeAlso({ Players.class, Player.class, PlayerGameStatevalues.class, Map.class, MapNode.class, MapNodes.class})
 public class GameState {
 
     @XmlElement(name="players", required = true)
-    protected Players players;
+    private Players players;
     @XmlElement(name="map")
-    protected Map map;
+    private Map map;
     @XmlElement(name="gameStateId", required = true)
-    protected String gameStateId;
+    private String gameStateId;
 
     /**
      * Ruft den Wert der players-Eigenschaft ab.

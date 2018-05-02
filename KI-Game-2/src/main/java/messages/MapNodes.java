@@ -6,7 +6,7 @@
 //
 
 
-package communication;
+package messages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}player" maxOccurs="2"/>
+ *         &lt;element ref="{}mapNode" maxOccurs="64" minOccurs="32"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,41 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "player"
+    "mapNode"
 })
-@XmlRootElement(name = "players")
-public class Players {
+@XmlRootElement(name = "mapNodes")
+public class MapNodes {
 
     @XmlElement(required = true)
-    protected List<Player> player;
+    protected List<MapNode> mapNode;
 
     /**
-     * Gets the value of the player property.
+     * Gets the value of the mapNode property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the player property.
+     * This is why there is not a <CODE>set</CODE> method for the mapNode property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getPlayer().add(newItem);
+     *    getMapNode().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Player }
+     * {@link MapNode }
      * 
      * 
      */
-    public List<Player> getPlayer() {
-        if (player == null) {
-            player = new ArrayList<Player>();
+    public List<MapNode> getMapNode() {
+        if (mapNode == null) {
+            mapNode = new ArrayList<MapNode>();
         }
-        return this.player;
+        return this.mapNode;
     }
 
 }

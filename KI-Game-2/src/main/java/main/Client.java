@@ -71,29 +71,30 @@ public class Client {
 
 		/* ignore response to sendhalfmap, will get ERROR in every situation */
 		
-		client.sendHalfMap(playerID.getId(), map);
+		client.sendHalfMap(map);
 
 		/* Wait for other Player - State */
 
-		while (true == client.checkPlayState(map)) {
-
-			System.exit(0);
-			if (playerState == PlayerGameStatevalues.SHOULD_WAIT) {
-
-				/* Wait 0,4 s */
-				Thread.sleep(400);
-			}
-		}
-
+		for (;;) {
 		
-		/* start playing */
-
-		while (running) {
-			/* Wait for allowance to move - State */
-
-			/* move - Move */
-			/* Wait 0,4 s */
-			Thread.sleep(400);
+			switch (client.checkPlayState(map)) {
+			case SHOULD_WAIT:
+				Thread.sleep(400);
+				continue;
+			case SHOULD_ACT_NEXT:
+				Movement move = new Movement();
+				move.doMove(map);
+				client.sendMovement(move);
+				break;
+			case LOST:
+				System.out.println(PlayerInformation.getFirstname() + " won the game " + gameID.getId());
+				System.exit(0);
+				break;
+			case WON:
+				System.out.println("Dumb computer lost the game " + gameID.getId());
+				System.exit(0);
+				break;
+			}
 		}
 	}
 }

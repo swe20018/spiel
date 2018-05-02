@@ -75,27 +75,30 @@ public class RestAPIClient {
 	 * @return if there is an error got from Server
 	 */
 
-	public boolean sendHalfMap(String uniquePlayerID, LocalMap map) throws Exception {
+	public boolean sendHalfMap(LocalMap map) throws Exception {
 
 		HalfMap.NewMapNodes value = new HalfMap.NewMapNodes();
 
 		/* pay attention: line = Y, column = X */
-		
+
 		for (int line = 0; line < 3; line++) {
 			for (int column = 0; column < 8; column++) {
 				HalfMap.NewMapNodes.NewMapNode element = new HalfMap.NewMapNodes.NewMapNode();
 				element.setX(column);
 				element.setY(line);
 				element.setTerrain(map.getField(line, column).getType());
-				element.setFortPresent(map.getField(line, column).HasCastle());
+				if (map.getField(line, column).getFortState() == FortStatevalues.MY_FORT_PRESENT)
+					element.setFortPresent(true);
+				else
+					element.setFortPresent(true);
 				value.getNewMapNode().add(element);
 			}
 		}
-		
+
 		HalfMap payload = new HalfMap();
-		payload.setUniquePlayerID(uniquePlayerID);
+		payload.setUniquePlayerID(uniquePlayerID.getId());
 		payload.setNewMapNodes(value);
-		
+
 		URL sendHalfMapUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/halfmap");
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -112,33 +115,82 @@ public class RestAPIClient {
 	}
 
 	/**
-	 * get play state from server
-	 * param playID and map
-	 * Answer could include map information and player information
+	 * get play state from server param playID and map Answer could include map
+	 * information and player information
 	 * 
 	 * @return if there is an error got from Server
 	 */
 
-	public boolean checkPlayState(LocalMap map) throws Exception {
-		
-		URL checkPlayStateUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/state/"+ uniquePlayerID.getId());
+	public PlayerGameStatevalues checkPlayState(LocalMap map) throws Exception {
+
+		URL checkPlayStateUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/state/" + uniquePlayerID.getId());
 		RestTemplate restTemplate = new RestTemplate();
 
-		ResponseEnvelope<GameState> gameStateMessage = restTemplate.getForObject(checkPlayStateUrl.toURI(), ResponseEnvelope.class);
-		
+		ResponseEnvelope<GameState> gameStateMessage = restTemplate.getForObject(checkPlayStateUrl.toURI(),
+				ResponseEnvelope.class);
+
 		if (gameStateMessage.getState() == ResponseState.OK) {
 
-			System.out.println (gameStateMessage.getData().gameStateId);
+			System.out.println(gameStateMessage.getData());
+			
+			/* Transfer Map from Server to local Map */
+			
+			/* pay attention: line = Y, column = X */
+
+			for (int nodeNumber = 0 ; nodeNumber < 64 ; nodeNumber++ ) {
+				
+				MapNode node = gameStateMessage.getData().getMap().getMapNodes().getMapNode().get(nodeNumber);
+				
+				int line = node.getY();
+				int column = node.getX();
+				Field field = map.getField(line, column);
+				field.setType(node.getTerrain());
+				field.setFortState(node.getFortState());
+				field.setPlayerState(node.getPlayerPositionState());
+				field.setTreasureState(node.getTresureState());
+			}
+			
 			Players players = gameStateMessage.getData().getPlayers();
 			Player player1 = players.getPlayer().get(0);
 			System.out.println(player1.getLastName());
 			Player player2 = players.getPlayer().get(1);
 			System.out.println(player2.getLastName());
-			return true;
-		}
-		else {
+			if (player1.getStudentID() == PlayerInformation.getMatnr()) {
+				/* it´s myself */
+				return player1.getState();
+			} else {
+				return player2.getState();
+			}
+		} else {
 			System.out.println(gameStateMessage.getExceptionMessage());
 			System.out.println(gameStateMessage.getExceptionName());
+			return PlayerGameStatevalues.LOST;
+		}
+	}
+
+	/**
+	 * send the planned move to the server Answer is only a response envelope
+	 * 
+	 * @return okay or error - and this may be ignored
+	 */
+
+	public boolean sendMovement(Movement move) throws Exception {
+
+		AvatarMove payload = new AvatarMove();
+		payload.setUniquePlayerID(uniquePlayerID.getId());
+		payload.setMove(move.getMoveValue());
+
+		URL sendMoveUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/move");
+		RestTemplate restTemplate = new RestTemplate();
+
+		ResponseEnvelope<HalfMapAnswer> moveMessage = restTemplate.postForObject(sendMoveUrl.toURI(), payload,
+				ResponseEnvelope.class);
+
+		if (moveMessage.getState() == ResponseState.OK)
+			return true;
+		else {
+			System.out.println(moveMessage.getExceptionMessage());
+			System.out.println(moveMessage.getExceptionName());
 			return false;
 		}
 	}

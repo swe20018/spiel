@@ -4,6 +4,9 @@ import messages.Terraintype;
 import static java.lang.Math.*;
 import java.util.Random;
 
+import communication.FortStatevalues;
+import communication.PlayerStatevalues;
+
 public class LocalMap {
 
 	private Field[][] field;
@@ -143,8 +146,8 @@ public class LocalMap {
 
 		setCastlePosition(new Position(2, 0));
 		setAvatarPosition(new Position(2, 0));
-		field[2][0].setCastle();
-		field[2][0].setAvatar();
+		field[2][0].setFortState(FortStatevalues.MY_FORT_PRESENT);
+		field[2][0].setPlayerState(PlayerStatevalues.MY_POSITION);
 
 		/* add static 5 MOUNTAIN and 5 WATER */
 
@@ -156,7 +159,7 @@ public class LocalMap {
 			int linePos = rnd.nextInt(4);
 			int columnPos = rnd.nextInt(8);
 
-			if (field[linePos][columnPos].hasCastle)
+			if (field[linePos][columnPos].getFortState() == FortStatevalues.MY_FORT_PRESENT)
 				continue;
 			if (field[linePos][columnPos].getType() != Terraintype.GRASS)
 				continue;
@@ -170,7 +173,7 @@ public class LocalMap {
 			int linePos = rnd.nextInt(4);
 			int columnPos = rnd.nextInt(8);
 
-			if (field[linePos][columnPos].hasCastle)
+			if (field[linePos][columnPos].getFortState() == FortStatevalues.MY_FORT_PRESENT)
 				continue;
 			if (field[linePos][columnPos].getType() != Terraintype.GRASS)
 				continue;
