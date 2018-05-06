@@ -27,9 +27,18 @@ public class RestAPIClient {
 	private URL serverUrl;
 	private GameID uniqueGameID;
 	private PlayerID uniquePlayerID;
+	private boolean hasCollectedTreasure;
 
 	public RestAPIClient(String serverUrl) throws Exception {
 		this.serverUrl = new URL(serverUrl);
+		hasCollectedTreasure = false;
+	}
+
+	/**
+	 * @return the hasCollectedTreasure
+	 */
+	public boolean hasCollectedTreasure() {
+		return hasCollectedTreasure;
 	}
 
 	/**
@@ -133,23 +142,50 @@ public class RestAPIClient {
 
 			System.out.println(gameStateMessage.getData());
 			
-			/* Transfer Map from Server to local Map */
+			/******************** just for test *****************/
+			if (null == null)
+				return PlayerGameStatevalues.SHOULD_ACT_NEXT;
 			
+			/* Transfer Map from Server to local Map */
+
 			/* pay attention: line = Y, column = X */
 
-			for (int nodeNumber = 0 ; nodeNumber < 64 ; nodeNumber++ ) {
-				
+			for (int nodeNumber = 0; nodeNumber < 64; nodeNumber++) {
+
 				MapNode node = gameStateMessage.getData().getMap().getMapNodes().getMapNode().get(nodeNumber);
-				
+
 				int line = node.getY();
 				int column = node.getX();
 				Field field = map.getField(line, column);
 				field.setType(node.getTerrain());
 				field.setFortState(node.getFortState());
-				field.setPlayerState(node.getPlayerPositionState());
 				field.setTreasureState(node.getTresureState());
+				field.setPlayerState(node.getPlayerPositionState());
+				
+				/* Save some interesting positions */
+				switch (field.getPlayerState()) {
+				case BOTH_PLAYER_POSITION:
+					map.setAvatarPosition(new Position(line, column));
+				case ENEMY_PLAYER_POSITION:
+					if (null == map.getFirstEnemyPosition()) {
+						/*
+						 * never got Enemyposition, this is the first time - and only 10 steps away
+						 * castle
+						 */
+						/* this will help to find enemy´s castle quicker */
+
+						map.setFirstEnemyPosition(new Position(line, column));
+					}
+				case MY_POSITION:
+					map.setAvatarPosition(new Position(line, column));
+					break;
+				case NO_PLAYER_PRESENT:
+					break;
+				}
 			}
 			
+			/* Get Info from Players */
+
 			Players players = gameStateMessage.getData().getPlayers();
 			Player player1 = players.getPlayer().get(0);
 			System.out.println(player1.getLastName());
@@ -157,6 +193,13 @@ public class RestAPIClient {
 			System.out.println(player2.getLastName());
 			if (player1.getStudentID() == PlayerInformation.getMatnr()) {
 				/* it´s myself */
+				if ((false == hasCollectedTreasure) &&
+						(player1.isCollectedTreasure())) {
+					/* and I found the treasure */
+					System.out.println("*****Treasure found *****");
+					map.clearVisitState(); /* start over walking */
+					hasCollectedTreasure = true;
+				}
 				return player1.getState();
 			} else {
 				return player2.getState();
@@ -174,11 +217,11 @@ public class RestAPIClient {
 	 * @return okay or error - and this may be ignored
 	 */
 
-	public boolean sendMovement(Movement move) throws Exception {
+	public boolean sendMovement(MoveValues move) throws Exception {
 
 		AvatarMove payload = new AvatarMove();
 		payload.setUniquePlayerID(uniquePlayerID.getId());
-		payload.setMove(move.getMoveValue());
+		payload.setMove(move);
 
 		URL sendMoveUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/move");
 		RestTemplate restTemplate = new RestTemplate();

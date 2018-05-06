@@ -33,24 +33,31 @@ public class Client {
 		PlayerGameStatevalues playerState = PlayerGameStatevalues.SHOULD_WAIT; /* State of the actual player */
 		RestAPIClient client;
 		String serverString = "http://swe.wst.univie.ac.at:18235/";
+		GameID gameID = null;;
 
 		boolean running = true;
 
 		switch (args.length) {
 		case 0: /* just start with default values */
 			break;
-		case 1: /* got optional ServerUrl */
-			serverString = args[0];
+		case 1: /* could be optional ServerUrl or optional game-ID*/
+			if (args[0].startsWith("http"))
+				serverString = args[0];
+			else
+				gameID = new GameID(args[0]);
 			break;
 		default:
 			showUsage();
 			System.exit(0);
 		}
+		
 		client = new RestAPIClient(serverString);
 
-		/* Get Game-ID - Register */
+		if (null == gameID) {
+			/* Get Game-ID - Register */
 
-		GameID gameID = client.createNewGame();
+			gameID = client.createNewGame();
+		}
 
 		/* Get Player-ID - Register */
 
@@ -72,6 +79,7 @@ public class Client {
 		/* ignore response to sendhalfmap, will get ERROR in every situation */
 		
 		client.sendHalfMap(map);
+		Movement move = new Movement();
 
 		/* Wait for other Player - State */
 
@@ -82,10 +90,12 @@ public class Client {
 				Thread.sleep(400);
 				continue;
 			case SHOULD_ACT_NEXT:
-				Movement move = new Movement();
-				move.doMove(map);
-				client.sendMovement(move);
-				break;
+				/********************* client.sendMovement(move.doMove(map, client.hasCollectedTreasure())); ************/
+				move.doMove(map, client.hasCollectedTreasure());
+				map.showLocalMap();
+				Thread.sleep(2000);
+				continue;
+				/******************** break; **************/
 			case LOST:
 				System.out.println(PlayerInformation.getFirstname() + " won the game " + gameID.getId());
 				System.exit(0);

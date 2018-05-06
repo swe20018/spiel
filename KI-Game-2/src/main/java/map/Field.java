@@ -91,8 +91,20 @@ public class Field {
 			info += "*";
 			break;
 		case NO_OR_UNKNOWN_TRESURE_STATE:
-			info += " ";
+			if (hasEnemy) {
+				info += "~";
+			}
+			else {
+				info += " ";
+			}
 			break;
+		}
+		
+		if (hasBeenVisited) {
+			info += ".";
+		}
+		else {
+			info += " ";
 		}
 	
 		return info;
@@ -140,6 +152,11 @@ public class Field {
 		this.hasBeenVisited = true;
 	}
 	
+	/**
+	 */
+	public void setNotBeenVisited() {
+		this.hasBeenVisited = false;
+	}
 	/**
 	 * @return the hasMountainStepDown
 	 */

@@ -11,9 +11,11 @@ public class LocalMap {
 
 	private Field[][] field;
 	private Position avatarPosition;
+
+
 	private Position castlePosition;
 	private Position treasurePosition;
-	private Position enemyPosition;
+	private Position firstEnemyPosition;
 
 	public LocalMap() {
 
@@ -21,7 +23,7 @@ public class LocalMap {
 		avatarPosition = new Position();
 		castlePosition = new Position();
 		treasurePosition = new Position();
-		enemyPosition = new Position();
+		firstEnemyPosition = null;
 
 		for (int line = 0; line < 8; line++)
 			for (int column = 0; column < 8; column++)
@@ -195,7 +197,7 @@ public class LocalMap {
 
 		/* top line */
 		for (int column = 0; column < 8; column++) {
-			System.out.print ("+-----");
+			System.out.print ("+------");
 		}
 		System.out.println("+");
 		
@@ -206,12 +208,23 @@ public class LocalMap {
 			System.out.println("|");
 			/* between and finishing line */
 			for (int column = 0; column < 8; column++) {
-				System.out.print ("+-----");
+				System.out.print ("+------");
 			}
 			System.out.println("+");
 		}
 
 		return;
+	}
+	
+	/**
+	 * when treasure found, it is necessary to walk around again, even where I have been already
+	 */
+	
+	public void clearVisitState() {
+		
+		for (int line = 0; line < 8; line++)
+			for (int column = 0; column < 8; column++)
+				field[line][column].setNotBeenVisited();
 	}
 
 	/**
@@ -253,21 +266,6 @@ public class LocalMap {
 	}
 	
 	/**
-	 * @return the avatarPosition
-	 */
-	public Position getAvatarPosition() {
-		return avatarPosition;
-	}
-
-	/**
-	 * @param avatarPosition
-	 *            the avatarPosition to set
-	 */
-	public void setAvatarPosition(Position avatarPosition) {
-		this.avatarPosition = avatarPosition;
-	}
-
-	/**
 	 * @return the castlePosition
 	 */
 	public Position getCastlePosition() {
@@ -295,5 +293,31 @@ public class LocalMap {
 	 */
 	public void setTreasurePosition(Position treasurePosition) {
 		this.treasurePosition = treasurePosition;
+	}
+	/**
+	 * @return the avatarPosition
+	 */
+	public Position getAvatarPosition() {
+		return avatarPosition;
+	}
+
+	/**
+	 * @param avatarPosition the avatarPosition to set
+	 */
+	public void setAvatarPosition(Position avatarPosition) {
+		this.avatarPosition = avatarPosition;
+	}
+	/**
+	 * @return the enemyPosition
+	 */
+	public Position getFirstEnemyPosition() {
+		return firstEnemyPosition;
+	}
+
+	/**
+	 * @param enemyPosition the enemyPosition to set
+	 */
+	public void setFirstEnemyPosition(Position firstEnemyPosition) {
+		this.firstEnemyPosition = firstEnemyPosition;
 	}
 }

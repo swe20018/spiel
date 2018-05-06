@@ -38,22 +38,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 
-@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "gameState", propOrder = {
     "players",
     "map",
     "gameStateId"
 })
+
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlSeeAlso({ Players.class, Player.class, PlayerGameStatevalues.class, Map.class, MapNode.class, MapNodes.class})
+
 public class GameState {
 
     @XmlElement(name="players", required = true)
-    private Players players;
+    private final Players players;
     @XmlElement(name="map")
-    private Map map;
+    private final Map map;
     @XmlElement(name="gameStateId", required = true)
-    private String gameStateId;
+    private final String gameStateId;
 
+    public GameState () {
+    	this.players = null;
+    	this.map = null;
+    	this.gameStateId = null;
+    }
+    
+    public GameState(Players players, Map map, String gameStateId) {
+    	this.players = players;
+    	this.map = map;
+    	this.gameStateId = gameStateId;
+    }
+    
     /**
      * Ruft den Wert der players-Eigenschaft ab.
      * 
@@ -64,18 +78,6 @@ public class GameState {
      */
     public Players getPlayers() {
         return players;
-    }
-
-    /**
-     * Legt den Wert der players-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Players }
-     *     
-     */
-    public void setPlayers(Players value) {
-        this.players = value;
     }
 
     /**
@@ -91,18 +93,6 @@ public class GameState {
     }
 
     /**
-     * Legt den Wert der map-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Map }
-     *     
-     */
-    public void setMap(Map value) {
-        this.map = value;
-    }
-
-    /**
      * Ruft den Wert der gameStateId-Eigenschaft ab.
      * 
      * @return
@@ -113,17 +103,4 @@ public class GameState {
     public String getGameStateId() {
         return gameStateId;
     }
-
-    /**
-     * Legt den Wert der gameStateId-Eigenschaft fest.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGameStateId(String value) {
-        this.gameStateId = value;
-    }
-
 }
