@@ -6,8 +6,8 @@ import messages.*;
 public class Field {
 
 	private PlayerStatevalues	playerState;		/* own Avatar */
-	private FortStatevalues fortState;
-	private TresureStatevalues treasureState;
+	private FortStatevalues 	fortState;
+	private TresureStatevalues	treasureState;
 	boolean hasEnemy;		/* other Avatars first occurence, maybe helps to find other castle*/
 	boolean hasBeenVisited;
 	
