@@ -1,19 +1,43 @@
 package dataobjects;
 
+import org.junit.experimental.theories.Theories;
+
 public class PlayerInformation {
 
-	//default information
-	private final static String matNr = "a1063229";
-	private final static String firstName = "Jennifer"; 
-	private final static String lastName = "Posch";
+	private String matNr;
+	private String firstName;
+	private String lastName;
 	
-	public static String getMatnr() {
-		return matNr;
+	public PlayerInformation (String matNr, String firstName, String lastName) {
+		this.matNr = matNr;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
-	public static String getFirstname() {
+	// default information
+	public PlayerInformation () {
+		this.matNr = "a1063229";
+		this.firstName = "Jennifer";
+		this.lastName = "Posch";
+	}
+	public String getMatnr() {
+		return this.matNr;
+	}
+	public String getFirstName() {
 		return firstName;
 	}
-	public static String getLastname() {
+	public String getLastName() {
 		return lastName;
+	}
+	public void setMatnr(String matNr) {
+		this.matNr = matNr;
+		return;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+		return;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+		return;
 	}  
 }

@@ -7,6 +7,7 @@ import org.junit.experimental.theories.Theories;
 import dataobjects.GameID;
 import dataobjects.PlayerID;
 import dataobjects.PlayerInformation;
+import org.apache.commons.cli.*;
 
 import map.*;
 import messages.*;
@@ -21,36 +22,64 @@ import communication.*;
 
 public class Client {
 
-	/**
-	 * showUsage
-	 */
-	static void showUsage() {
-		System.out.println("Usage: <optional ServerUrl>");
-	}
-
 	public static void main(String[] args) throws Exception {
 
 		PlayerGameStatevalues playerState = PlayerGameStatevalues.SHOULD_WAIT; /* State of the actual player */
 		RestAPIClient client;
-		String serverString = "http://swe.wst.univie.ac.at:18235/";
-		GameID gameID = null;;
+		String serverString = null;
+		GameID gameID = null;
+		PlayerInformation playerInformation = new PlayerInformation();
 
 		boolean running = true;
 
-		switch (args.length) {
-		case 0: /* just start with default values */
-			break;
-		case 1: /* could be optional ServerUrl or optional game-ID*/
-			if (args[0].startsWith("http"))
-				serverString = args[0];
-			else
-				gameID = new GameID(args[0]);
-			break;
-		default:
-			showUsage();
-			System.exit(0);
+		/* parse command line options */
+
+		Options options = new Options();
+
+		Option serverStringOption = new Option("s", "serverString", true, "Path to the server");
+		serverStringOption.setRequired(false);
+		serverStringOption.setArgName("Server Path");
+		options.addOption(serverStringOption);
+
+		Option gameIdOption = new Option("g", "gameID", true, "ID of a game");
+		gameIdOption.setRequired(false);
+		gameIdOption.setArgName("Game-ID");
+		options.addOption(gameIdOption);
+
+		Option playerMatNrOption = new Option("m", "matNr", true, "Players Matrikel Number");
+		playerMatNrOption.setRequired(false);
+		playerMatNrOption.setArgName("MatNr");
+		options.addOption(playerMatNrOption);
+		Option playerFirstNameOption = new Option("f", "FirstName", true, "Players First Name");
+		playerFirstNameOption.setRequired(false);
+		playerFirstNameOption.setArgName("FirstName");
+		options.addOption(playerFirstNameOption);
+		Option playerLastNameOption = new Option("l", "LastName", true, "Players Last Name");
+		playerLastNameOption.setRequired(false);
+		playerLastNameOption.setArgName("LastName");
+		options.addOption(playerLastNameOption);
+
+		CommandLineParser commandLineParser = new DefaultParser();
+		HelpFormatter helpFormatter = new HelpFormatter();
+		CommandLine commandLine;
+
+		try {
+			commandLine = commandLineParser.parse(options, args);
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			helpFormatter.printHelp("KI-Game", options);
+
+			System.exit(1);
+			return;
 		}
-		
+
+		if (commandLine.hasOption("g"))
+			gameID = new GameID(commandLine.getOptionValue("g"));
+		serverString = commandLine.getOptionValue("s", "http://swe.wst.univie.ac.at:18235/");
+		playerInformation.setMatnr(commandLine.getOptionValue("m", playerInformation.getMatnr()));
+		playerInformation.setFirstName(commandLine.getOptionValue("f", playerInformation.getFirstName()));
+		playerInformation.setLastName(commandLine.getOptionValue("l", playerInformation.getLastName()));
+
 		client = new RestAPIClient(serverString);
 
 		if (null == gameID) {
@@ -61,7 +90,7 @@ public class Client {
 
 		/* Get Player-ID - Register */
 
-		PlayerID playerID = client.registerNewPlayer();
+		PlayerID playerID = client.registerNewPlayer(playerInformation);
 
 		System.out.println("GameID = " + gameID.getId() + " PlayerID = " + playerID.getId());
 
@@ -77,30 +106,32 @@ public class Client {
 		map.showLocalMap();
 
 		/* ignore response to sendhalfmap, will get ERROR in every situation */
-		
+
 		client.sendHalfMap(map);
 		Movement move = new Movement();
 
 		/* Wait for other Player - State */
 
 		for (;;) {
-		
-			switch (client.checkPlayState(map)) {
+
+			switch (client.checkPlayState(map, playerInformation)) {
 			case SHOULD_WAIT:
 				Thread.sleep(400);
 				continue;
 			case SHOULD_ACT_NEXT:
-				/********************* client.sendMovement(move.doMove(map, client.hasCollectedTreasure())); ************/
+				/*********************
+				 * client.sendMovement(move.doMove(map, client.hasCollectedTreasure()));
+				 ************/
 				move.doMove(map, client.hasCollectedTreasure());
 				map.showLocalMap();
 				Thread.sleep(2000);
 				continue;
-				/******************** break; **************/
-			case LOST:
-				System.out.println(PlayerInformation.getFirstname() + " won the game " + gameID.getId());
+			/******************** break; **************/
+			case WON:
+				System.out.println(playerInformation.getFirstName() + " won the game " + gameID.getId());
 				System.exit(0);
 				break;
-			case WON:
+			case LOST:
 				System.out.println("Dumb computer lost the game " + gameID.getId());
 				System.exit(0);
 				break;

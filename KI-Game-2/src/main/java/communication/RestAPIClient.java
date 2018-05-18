@@ -62,10 +62,10 @@ public class RestAPIClient {
 	 * @return PlayerID got from Server
 	 */
 
-	public PlayerID registerNewPlayer() throws Exception {
+	public PlayerID registerNewPlayer(PlayerInformation playerInformation) throws Exception {
 
-		RegisterPlayer payload = new RegisterPlayer(PlayerInformation.getMatnr(), PlayerInformation.getFirstname(),
-				PlayerInformation.getLastname());
+		RegisterPlayer payload = new RegisterPlayer(playerInformation.getMatnr(), playerInformation.getFirstName(),
+				playerInformation.getLastName());
 
 		URL registerNewPlayerUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/register");
 		RestTemplate restTemplate = new RestTemplate();
@@ -130,11 +130,11 @@ public class RestAPIClient {
 	 * @return if there is an error got from Server
 	 */
 
-	public PlayerGameStatevalues checkPlayState(LocalMap map) throws Exception {
+	public PlayerGameStatevalues checkPlayState(LocalMap map, PlayerInformation playerInformation) throws Exception {
 
 		URL checkPlayStateUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/state/" + uniquePlayerID.getId());
 		RestTemplate restTemplate = new RestTemplate();
-
+		
 		ResponseEnvelope<GameState> gameStateMessage = restTemplate.getForObject(checkPlayStateUrl.toURI(),
 				ResponseEnvelope.class);
 
@@ -191,7 +191,7 @@ public class RestAPIClient {
 			System.out.println(player1.getLastName());
 			Player player2 = players.getPlayer().get(1);
 			System.out.println(player2.getLastName());
-			if (player1.getStudentID() == PlayerInformation.getMatnr()) {
+			if (player1.getStudentID() == playerInformation.getMatnr()) {
 				/* it´s myself */
 				if ((false == hasCollectedTreasure) &&
 						(player1.isCollectedTreasure())) {
