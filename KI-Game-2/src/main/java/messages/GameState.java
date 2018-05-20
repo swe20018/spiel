@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
     "map"
 })
 
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlSeeAlso({ Players.class, Player.class, PlayerGameStatevalues.class, Map.class, MapNode.class, MapNodes.class})
 
 public class GameState {

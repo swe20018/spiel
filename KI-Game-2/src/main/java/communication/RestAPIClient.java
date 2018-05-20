@@ -138,33 +138,22 @@ public class RestAPIClient {
 		RestTemplate restTemplate = new RestTemplate();
 		PlayerGameStatevalues myGameStateValue = PlayerGameStatevalues.SHOULD_WAIT;
 		
-		ResponseEnvelope forObject = restTemplate.getForObject(checkPlayStateUrl.toURI(),
+		ResponseEnvelope<GameState> gameStateMessage = restTemplate.getForObject(checkPlayStateUrl.toURI(),
 				ResponseEnvelope.class);
-		ResponseEnvelope<GameState> gameStateMessage = forObject;
-		
-		System.out.println(forObject.getData().getClass());
-
+	
 		if (gameStateMessage.getState() == ResponseState.OK) {
 
 			/* Get Info from Players / at least myself */
 
 			Players players = gameStateMessage.getData().getPlayers();
 			Player player1 = players.getPlayer().get(0);
-			System.out.println(player1.getLastName());
-			Player player2 = players.getPlayer().get(1);
-			System.out.println(player2.getLastName());
+
+			if (players.getPlayer().size() == 2) {
+				/* got Information about second player */
 			
-			if (player1.getStudentID() == playerInformation.getMatnr()) {
-				/* it´s myself */
-				if ((false == hasCollectedTreasure) &&
-						(player1.isCollectedTreasure())) {
-					/* and I found the treasure */
-					System.out.println("*****Treasure found *****");
-					map.clearVisitState(); /* start over walking */
-					hasCollectedTreasure = true;
-				}
-				myGameStateValue = player1.getState();
-			} else {
+				Player player2 = players.getPlayer().get(1);
+				System.out.println(player2.getLastName());
+				
 				if (player2.getStudentID() == playerInformation.getMatnr()) {
 					/* it´s myself */
 					if ((false == hasCollectedTreasure) &&
@@ -176,6 +165,18 @@ public class RestAPIClient {
 					}
 					myGameStateValue = player2.getState();
 				}
+			}
+			
+			if (player1.getStudentID() == playerInformation.getMatnr()) {
+				/* it´s myself */
+				if ((false == hasCollectedTreasure) &&
+						(player1.isCollectedTreasure())) {
+					/* and I found the treasure */
+					System.out.println("*****Treasure found *****");
+					map.clearVisitState(); /* start over walking */
+					hasCollectedTreasure = true;
+				}
+				myGameStateValue = player1.getState();
 			}
 			
 			if (myGameStateValue == PlayerGameStatevalues.SHOULD_WAIT)

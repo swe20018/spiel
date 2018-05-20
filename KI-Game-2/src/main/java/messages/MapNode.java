@@ -45,7 +45,7 @@ import communication.TresureStatevalues;
  * 
  * 
  */
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "", propOrder = {
     "playerPositionState",
     "terrain",

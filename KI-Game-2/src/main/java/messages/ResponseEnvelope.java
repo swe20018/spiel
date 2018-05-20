@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlAnyElement;
 
 @XmlRootElement(name="ResponseEnvelope",namespace="")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({ PlayerIdentifier.class})
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlSeeAlso({ PlayerIdentifier.class, Player.class, Players.class, Map.class, MapNode.class, GameState.class})
 public class ResponseEnvelope<T> {
 
 	@XmlElement(name="exceptionMessage")
