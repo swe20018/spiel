@@ -1,21 +1,18 @@
 package communication;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
+
 import org.springframework.web.client.RestTemplate;
 
-import dataobjects.GameID;
-import dataobjects.PlayerID;
-import dataobjects.PlayerInformation;
+import dataobjects.*;
 import messages.*;
 import map.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import com.sun.org.apache.xerces.internal.dom.*;
+
 
 /**
  * do all of the communication for server and client principle idea:
@@ -71,10 +68,15 @@ public class RestAPIClient {
 
 		URL registerNewPlayerUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/register");
 		RestTemplate restTemplate = new RestTemplate();
-
+		
 		ResponseEnvelope<PlayerIdentifier> playerIdMessage = restTemplate.postForObject(registerNewPlayerUrl.toURI(),
 				payload, ResponseEnvelope.class);
 
+		if (playerIdMessage.getState() != ResponseState.OK) {
+			/* not okay to register, forget it */
+			System.exit(1);
+		}
+		
 		uniquePlayerID = new PlayerID(playerIdMessage.getData());
 
 		return uniquePlayerID;
@@ -147,14 +149,15 @@ public class RestAPIClient {
 
 			Players players = gameStateMessage.getData().getPlayers();
 			Player player1 = players.getPlayer().get(0);
+			System.out.println("Player 1 " + player1.getLastName());
 
 			if (players.getPlayer().size() == 2) {
 				/* got Information about second player */
 			
 				Player player2 = players.getPlayer().get(1);
-				System.out.println(player2.getLastName());
+				System.out.println("Player 2 " + player2.getLastName());
 				
-				if (player2.getStudentID() == playerInformation.getMatnr()) {
+				if (player2.getStudentID().equals(playerInformation.getMatnr())) {
 					/* it´s myself */
 					if ((false == hasCollectedTreasure) &&
 							(player2.isCollectedTreasure())) {
@@ -167,7 +170,7 @@ public class RestAPIClient {
 				}
 			}
 			
-			if (player1.getStudentID() == playerInformation.getMatnr()) {
+			if (player1.getStudentID().equals(playerInformation.getMatnr())) {
 				/* it´s myself */
 				if ((false == hasCollectedTreasure) &&
 						(player1.isCollectedTreasure())) {
@@ -179,8 +182,11 @@ public class RestAPIClient {
 				myGameStateValue = player1.getState();
 			}
 			
-			if (myGameStateValue == PlayerGameStatevalues.SHOULD_WAIT)
+			if (myGameStateValue != PlayerGameStatevalues.SHOULD_ACT_NEXT) {
+			
+				/* no need to do anything else */
 				return myGameStateValue;
+			}
 						
 			/* Transfer Map from Server to local Map */
 
@@ -252,5 +258,9 @@ public class RestAPIClient {
 			System.out.println(moveMessage.getExceptionName());
 			return false;
 		}
+	}
+	
+	public void setGameId (GameID uniqueGameID) {
+		this.uniqueGameID = uniqueGameID;
 	}
 }

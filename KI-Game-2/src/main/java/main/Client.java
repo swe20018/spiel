@@ -72,21 +72,25 @@ public class Client {
 			System.exit(1);
 			return;
 		}
-
-		if (commandLine.hasOption("g"))
-			gameID = new GameID(commandLine.getOptionValue("g"));
+	
 		serverString = commandLine.getOptionValue("s", "http://swe.wst.univie.ac.at:18235/");
-		playerInformation.setMatnr(commandLine.getOptionValue("m", playerInformation.getMatnr()));
-		playerInformation.setFirstName(commandLine.getOptionValue("f", playerInformation.getFirstName()));
-		playerInformation.setLastName(commandLine.getOptionValue("l", playerInformation.getLastName()));
-
 		client = new RestAPIClient(serverString);
 
-		if (null == gameID) {
+		if (commandLine.hasOption("g")) {
+			gameID = new GameID(commandLine.getOptionValue("g"));
+			client.setGameId(gameID);
+		}
+		else {
 			/* Get Game-ID - Register */
 
 			gameID = client.createNewGame();
 		}
+		
+		System.out.println(gameID.getId());
+			
+		playerInformation.setMatnr(commandLine.getOptionValue("m", playerInformation.getMatnr()));
+		playerInformation.setFirstName(commandLine.getOptionValue("f", playerInformation.getFirstName()));
+		playerInformation.setLastName(commandLine.getOptionValue("l", playerInformation.getLastName()));
 
 		/* Get Player-ID - Register */
 
@@ -118,7 +122,7 @@ public class Client {
 		for (;;) {
 
 			playerState = client.checkPlayState(map, playerInformation);
-			System.out.println (playerState);
+			System.out.println ("GameID = " + gameID.getId() + " PlayerID = " + playerID.getId() + " " + playerState);
 			
 			switch (playerState) {
 			case SHOULD_WAIT:
