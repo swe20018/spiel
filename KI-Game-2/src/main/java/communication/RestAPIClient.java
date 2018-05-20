@@ -1,6 +1,7 @@
 package communication;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import com.sun.org.apache.xerces.internal.dom.*;
 
 /**
  * do all of the communication for server and client principle idea:
@@ -134,18 +136,51 @@ public class RestAPIClient {
 
 		URL checkPlayStateUrl = new URL(serverUrl, "game/" + uniqueGameID.getId() + "/state/" + uniquePlayerID.getId());
 		RestTemplate restTemplate = new RestTemplate();
+		PlayerGameStatevalues myGameStateValue = PlayerGameStatevalues.SHOULD_WAIT;
 		
-		ResponseEnvelope<GameState> gameStateMessage = restTemplate.getForObject(checkPlayStateUrl.toURI(),
+		ResponseEnvelope forObject = restTemplate.getForObject(checkPlayStateUrl.toURI(),
 				ResponseEnvelope.class);
+		ResponseEnvelope<GameState> gameStateMessage = forObject;
+		
+		System.out.println(forObject.getData().getClass());
 
 		if (gameStateMessage.getState() == ResponseState.OK) {
 
-			System.out.println(gameStateMessage.getData());
+			/* Get Info from Players / at least myself */
+
+			Players players = gameStateMessage.getData().getPlayers();
+			Player player1 = players.getPlayer().get(0);
+			System.out.println(player1.getLastName());
+			Player player2 = players.getPlayer().get(1);
+			System.out.println(player2.getLastName());
 			
-			/******************** just for test *****************/
-			if (null == null)
-				return PlayerGameStatevalues.SHOULD_ACT_NEXT;
+			if (player1.getStudentID() == playerInformation.getMatnr()) {
+				/* it´s myself */
+				if ((false == hasCollectedTreasure) &&
+						(player1.isCollectedTreasure())) {
+					/* and I found the treasure */
+					System.out.println("*****Treasure found *****");
+					map.clearVisitState(); /* start over walking */
+					hasCollectedTreasure = true;
+				}
+				myGameStateValue = player1.getState();
+			} else {
+				if (player2.getStudentID() == playerInformation.getMatnr()) {
+					/* it´s myself */
+					if ((false == hasCollectedTreasure) &&
+							(player2.isCollectedTreasure())) {
+						/* and I found the treasure */
+						System.out.println("*****Treasure found *****");
+						map.clearVisitState(); /* start over walking */
+						hasCollectedTreasure = true;
+					}
+					myGameStateValue = player2.getState();
+				}
+			}
 			
+			if (myGameStateValue == PlayerGameStatevalues.SHOULD_WAIT)
+				return myGameStateValue;
+						
 			/* Transfer Map from Server to local Map */
 
 			/* pay attention: line = Y, column = X */
@@ -183,27 +218,7 @@ public class RestAPIClient {
 					break;
 				}
 			}
-			
-			/* Get Info from Players */
-
-			Players players = gameStateMessage.getData().getPlayers();
-			Player player1 = players.getPlayer().get(0);
-			System.out.println(player1.getLastName());
-			Player player2 = players.getPlayer().get(1);
-			System.out.println(player2.getLastName());
-			if (player1.getStudentID() == playerInformation.getMatnr()) {
-				/* it´s myself */
-				if ((false == hasCollectedTreasure) &&
-						(player1.isCollectedTreasure())) {
-					/* and I found the treasure */
-					System.out.println("*****Treasure found *****");
-					map.clearVisitState(); /* start over walking */
-					hasCollectedTreasure = true;
-				}
-				return player1.getState();
-			} else {
-				return player2.getState();
-			}
+			return myGameStateValue;
 		} else {
 			System.out.println(gameStateMessage.getExceptionMessage());
 			System.out.println(gameStateMessage.getExceptionName());

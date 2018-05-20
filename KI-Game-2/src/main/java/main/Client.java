@@ -103,30 +103,33 @@ public class Client {
 			map.generateHalfMap();
 		} while (false == map.checkLocalMap());
 
-		map.showLocalMap();
+		// map.showLocalMap();
 
 		/* ignore response to sendhalfmap, will get ERROR in every situation */
 
 		client.sendHalfMap(map);
+		
+		/* Initialise grid for movment */
+		
 		Movement move = new Movement();
 
 		/* Wait for other Player - State */
 
 		for (;;) {
 
-			switch (client.checkPlayState(map, playerInformation)) {
+			playerState = client.checkPlayState(map, playerInformation);
+			System.out.println (playerState);
+			
+			switch (playerState) {
 			case SHOULD_WAIT:
-				Thread.sleep(400);
-				continue;
-			case SHOULD_ACT_NEXT:
-				/*********************
-				 * client.sendMovement(move.doMove(map, client.hasCollectedTreasure()));
-				 ************/
-				move.doMove(map, client.hasCollectedTreasure());
-				map.showLocalMap();
 				Thread.sleep(2000);
 				continue;
-			/******************** break; **************/
+			case SHOULD_ACT_NEXT:
+				move.doMove(map, client.hasCollectedTreasure());
+				client.sendMovement(move.doMove(map, client.hasCollectedTreasure()));
+				//map.showLocalMap();
+				Thread.sleep(2000);
+				break;
 			case WON:
 				System.out.println(playerInformation.getFirstName() + " won the game " + gameID.getId());
 				System.exit(0);

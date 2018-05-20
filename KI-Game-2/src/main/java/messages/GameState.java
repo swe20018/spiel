@@ -40,18 +40,18 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType(name = "gameState", propOrder = {
     "players",
-    "map",
-    "gameStateId"
+    "gameStateId",
+    "map"
 })
 
-@XmlAccessorType(XmlAccessType.NONE)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ Players.class, Player.class, PlayerGameStatevalues.class, Map.class, MapNode.class, MapNodes.class})
 
 public class GameState {
 
     @XmlElement(name="players", required = true)
     private final Players players;
-    @XmlElement(name="map")
+    @XmlElement(name="map", required = false)
     private final Map map;
     @XmlElement(name="gameStateId", required = true)
     private final String gameStateId;
