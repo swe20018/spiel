@@ -28,6 +28,7 @@ public class Client {
 		RestAPIClient client;
 		String serverString = null;
 		GameID gameID = null;
+		boolean isHalfMapSent = false;
 		PlayerInformation playerInformation = new PlayerInformation();
 
 		boolean running = true;
@@ -107,12 +108,8 @@ public class Client {
 			map.generateHalfMap();
 		} while (false == map.checkLocalMap());
 
-		// map.showLocalMap();
+		map.showLocalMap();
 
-		/* ignore response to sendhalfmap, will get ERROR in every situation */
-
-		client.sendHalfMap(map);
-		
 		/* Initialise grid for movment */
 		
 		Movement move = new Movement();
@@ -129,6 +126,11 @@ public class Client {
 				Thread.sleep(2000);
 				continue;
 			case SHOULD_ACT_NEXT:
+				if (!isHalfMapSent) {
+					client.sendHalfMap(map);
+					isHalfMapSent = true;
+					continue;
+				}
 				move.doMove(map, client.hasCollectedTreasure());
 				client.sendMovement(move.doMove(map, client.hasCollectedTreasure()));
 				//map.showLocalMap();

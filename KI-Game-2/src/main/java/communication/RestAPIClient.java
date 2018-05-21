@@ -3,7 +3,9 @@ package communication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import org.springframework.web.client.RestTemplate;
+import org.springframework.boot.logging.*;
 
 import dataobjects.*;
 import messages.*;
@@ -31,6 +33,8 @@ public class RestAPIClient {
 	public RestAPIClient(String serverUrl) throws Exception {
 		this.serverUrl = new URL(serverUrl);
 		hasCollectedTreasure = false;
+
+		
 	}
 
 	/**
@@ -94,7 +98,7 @@ public class RestAPIClient {
 
 		/* pay attention: line = Y, column = X */
 
-		for (int line = 0; line < 3; line++) {
+		for (int line = 0; line < 4; line++) {
 			for (int column = 0; column < 8; column++) {
 				HalfMap.NewMapNodes.NewMapNode element = new HalfMap.NewMapNodes.NewMapNode();
 				element.setX(column);
@@ -103,7 +107,7 @@ public class RestAPIClient {
 				if (map.getField(line, column).getFortState() == FortStatevalues.MY_FORT_PRESENT)
 					element.setFortPresent(true);
 				else
-					element.setFortPresent(true);
+					element.setFortPresent(false);
 				value.getNewMapNode().add(element);
 			}
 		}
@@ -182,18 +186,19 @@ public class RestAPIClient {
 				myGameStateValue = player1.getState();
 			}
 			
-			if (myGameStateValue != PlayerGameStatevalues.SHOULD_ACT_NEXT) {
-			
-				/* no need to do anything else */
+			/* check, if map present */
+
+			if (null == gameStateMessage.getData().getMap()) {
+				/* did not get a map */
 				return myGameStateValue;
 			}
-						
+			
 			/* Transfer Map from Server to local Map */
 
 			/* pay attention: line = Y, column = X */
 
-			for (int nodeNumber = 0; nodeNumber < 64; nodeNumber++) {
-
+			for (int nodeNumber = 0; nodeNumber < gameStateMessage.getData().getMap().getMapNodes().getMapNode().size(); nodeNumber++) {
+						
 				MapNode node = gameStateMessage.getData().getMap().getMapNodes().getMapNode().get(nodeNumber);
 
 				int line = node.getY();
@@ -218,6 +223,7 @@ public class RestAPIClient {
 
 						map.setFirstEnemyPosition(new Position(line, column));
 					}
+					break;
 				case MY_POSITION:
 					map.setAvatarPosition(new Position(line, column));
 					break;
@@ -225,6 +231,7 @@ public class RestAPIClient {
 					break;
 				}
 			}
+			map.showLocalMap();
 			return myGameStateValue;
 		} else {
 			System.out.println(gameStateMessage.getExceptionMessage());
