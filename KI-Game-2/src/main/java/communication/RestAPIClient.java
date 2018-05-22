@@ -201,6 +201,7 @@ public class RestAPIClient {
 						
 				MapNode node = gameStateMessage.getData().getMap().getMapNodes().getMapNode().get(nodeNumber);
 
+
 				int line = node.getY();
 				int column = node.getX();
 				Field field = map.getField(line, column);
@@ -208,6 +209,7 @@ public class RestAPIClient {
 				field.setFortState(node.getFortState());
 				field.setTreasureState(node.getTresureState());
 				field.setPlayerState(node.getPlayerPositionState());
+				/* System.out.println("X/line: " + line + " Y/column " + column + " : " + field.showField()); */
 				
 				/* Save some interesting positions */
 				switch (field.getPlayerState()) {

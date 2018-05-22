@@ -110,7 +110,7 @@ public class Client {
 
 		map.showLocalMap();
 
-		/* Initialise grid for movment */
+		/* Initialize grid for movement */
 		
 		Movement move = new Movement();
 
