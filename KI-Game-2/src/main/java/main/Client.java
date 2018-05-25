@@ -103,12 +103,6 @@ public class Client {
 
 		LocalMap map = new LocalMap();
 
-		do {
-
-			map.generateHalfMap();
-		} while (false == map.checkLocalMap());
-
-		map.showLocalMap();
 
 		/* Initialize grid for movement */
 		
@@ -127,6 +121,23 @@ public class Client {
 				continue;
 			case SHOULD_ACT_NEXT:
 				if (!isHalfMapSent) {
+
+					/* check, if already filled */
+					
+					int initLine = 0;
+					
+					if (Terraintype.EMPTY != map.getField(0, 0).getType()) {
+						/* yes, start with second half */
+						initLine = 4;
+					}
+										
+					do {
+
+						map.generateHalfMap(initLine);
+					} while (false == map.checkLocalMap());
+
+					map.showLocalMap();
+					
 					client.sendHalfMap(map);
 					isHalfMapSent = true;
 					continue;

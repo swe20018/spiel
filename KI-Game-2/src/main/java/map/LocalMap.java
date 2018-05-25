@@ -78,7 +78,7 @@ public class LocalMap {
 				}
 			}
 
-		if ((mountainCount < 3) | (waterCount < 4) | (grassCount < 15))
+		if ((mountainCount < 3) || (waterCount < 4) || (grassCount < 15))
 			return false;
 		
 		/* Find islands */
@@ -87,7 +87,7 @@ public class LocalMap {
 			for (int column = 0; column < 8; column++) {
 
 				if ((field[line][column].getType() == Terraintype.MOUNTAIN)
-						| (field[line][column].getType() == Terraintype.GRASS)) {
+						|| (field[line][column].getType() == Terraintype.GRASS)) {
 
 					/* Could be an island, check surrounding */
 
@@ -136,20 +136,20 @@ public class LocalMap {
 	 * @param which
 	 *            line to finish
 	 */
-	public void generateHalfMap() {
+	public void generateHalfMap(int initLine) {
 
 		/* initialize with GRASS */
 		
-		for (int line = 0; line < 4; line++)
+		for (int line = initLine ; line < initLine + 4; line++)
 			for (int column = 0; column < 8; column++)
 				field[line][column].setType(Terraintype.GRASS);
 
 		/* set own castle to somewhere */
 
-		setCastlePosition(new Position(2, 0));
-		setAvatarPosition(new Position(2, 0));
-		field[2][0].setFortState(FortStatevalues.MY_FORT_PRESENT);
-		field[2][0].setPlayerState(PlayerStatevalues.MY_POSITION);
+		setCastlePosition(new Position(initLine + 2, 0));
+		setAvatarPosition(new Position(initLine + 2, 0));
+		field[initLine + 2][0].setFortState(FortStatevalues.MY_FORT_PRESENT);
+		field[initLine + 2][0].setPlayerState(PlayerStatevalues.MY_POSITION);
 
 		/* add static 5 MOUNTAIN and 5 WATER */
 
@@ -158,7 +158,7 @@ public class LocalMap {
 		int counter;
 
 		for (counter = 0; counter < 5;) {
-			int linePos = rnd.nextInt(4);
+			int linePos = initLine + rnd.nextInt(4);
 			int columnPos = rnd.nextInt(8);
 
 			if (field[linePos][columnPos].getFortState() == FortStatevalues.MY_FORT_PRESENT)
@@ -172,7 +172,7 @@ public class LocalMap {
 		}
 		for (counter = 0; counter < 5;) {
 
-			int linePos = rnd.nextInt(4);
+			int linePos = initLine + rnd.nextInt(4);
 			int columnPos = rnd.nextInt(8);
 
 			if (field[linePos][columnPos].getFortState() == FortStatevalues.MY_FORT_PRESENT)

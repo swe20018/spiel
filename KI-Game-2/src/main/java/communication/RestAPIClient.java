@@ -153,13 +153,11 @@ public class RestAPIClient {
 
 			Players players = gameStateMessage.getData().getPlayers();
 			Player player1 = players.getPlayer().get(0);
-			System.out.println("Player 1 " + player1.getLastName());
 
 			if (players.getPlayer().size() == 2) {
 				/* got Information about second player */
 			
 				Player player2 = players.getPlayer().get(1);
-				System.out.println("Player 2 " + player2.getLastName());
 				
 				if (player2.getStudentID().equals(playerInformation.getMatnr())) {
 					/* it´s myself */
