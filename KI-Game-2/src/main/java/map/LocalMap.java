@@ -129,12 +129,10 @@ public class LocalMap {
 	}
 
 	/**
-	 * Generate new (halt) map content
+	 * Generate new (half) map content
 	 * 
 	 * @param which
 	 *            line to start
-	 * @param which
-	 *            line to finish
 	 */
 	public void generateHalfMap(int initLine) {
 

@@ -92,7 +92,7 @@ public class RestAPIClient {
 	 * @return if there is an error got from Server
 	 */
 
-	public boolean sendHalfMap(LocalMap map) throws Exception {
+	public boolean sendHalfMap(LocalMap map, int initLine) throws Exception {
 
 		HalfMap.NewMapNodes value = new HalfMap.NewMapNodes();
 
@@ -103,12 +103,13 @@ public class RestAPIClient {
 				HalfMap.NewMapNodes.NewMapNode element = new HalfMap.NewMapNodes.NewMapNode();
 				element.setX(column);
 				element.setY(line);
-				element.setTerrain(map.getField(line, column).getType());
-				if (map.getField(line, column).getFortState() == FortStatevalues.MY_FORT_PRESENT)
+				element.setTerrain(map.getField(line + initLine, column).getType());
+				if (map.getField(line + initLine, column).getFortState() == FortStatevalues.MY_FORT_PRESENT)
 					element.setFortPresent(true);
 				else
 					element.setFortPresent(false);
 				value.getNewMapNode().add(element);
+				System.out.println("X: "+ element.getX() + " Y:" + element.getY());
 			}
 		}
 

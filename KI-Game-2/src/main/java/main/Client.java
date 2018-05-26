@@ -136,9 +136,9 @@ public class Client {
 						map.generateHalfMap(initLine);
 					} while (false == map.checkLocalMap());
 
-					map.showLocalMap();
+					/* map.showLocalMap(); */
 					
-					client.sendHalfMap(map);
+					client.sendHalfMap(map, initLine);
 					isHalfMapSent = true;
 					continue;
 				}
