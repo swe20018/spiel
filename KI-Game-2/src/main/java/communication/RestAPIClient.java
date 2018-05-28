@@ -109,7 +109,7 @@ public class RestAPIClient {
 				else
 					element.setFortPresent(false);
 				value.getNewMapNode().add(element);
-				System.out.println("X: "+ element.getX() + " Y:" + element.getY());
+				/* System.out.println("X: "+ element.getX() + " Y:" + element.getY()); */
 			}
 		}
 
@@ -214,6 +214,7 @@ public class RestAPIClient {
 				switch (field.getPlayerState()) {
 				case BOTH_PLAYER_POSITION:
 					map.setAvatarPosition(new Position(line, column));
+					map.getField(line, column).setBeenVisited();
 				case ENEMY_PLAYER_POSITION:
 					if (null == map.getFirstEnemyPosition()) {
 						/*
@@ -227,6 +228,7 @@ public class RestAPIClient {
 					break;
 				case MY_POSITION:
 					map.setAvatarPosition(new Position(line, column));
+					map.getField(line, column).setBeenVisited();
 					break;
 				case NO_PLAYER_PRESENT:
 					break;
@@ -249,6 +251,8 @@ public class RestAPIClient {
 
 	public boolean sendMovement(MoveValues move) throws Exception {
 
+		System.out.println(move);
+		
 		AvatarMove payload = new AvatarMove();
 		payload.setUniquePlayerID(uniquePlayerID.getId());
 		payload.setMove(move);

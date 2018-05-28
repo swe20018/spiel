@@ -117,7 +117,7 @@ public class Client {
 			
 			switch (playerState) {
 			case SHOULD_WAIT:
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				continue;
 			case SHOULD_ACT_NEXT:
 				if (!isHalfMapSent) {
@@ -136,16 +136,15 @@ public class Client {
 						map.generateHalfMap(initLine);
 					} while (false == map.checkLocalMap());
 
-					/* map.showLocalMap(); */
+					map.showLocalMap();
 					
 					client.sendHalfMap(map, initLine);
 					isHalfMapSent = true;
 					continue;
 				}
-				move.doMove(map, client.hasCollectedTreasure());
 				client.sendMovement(move.doMove(map, client.hasCollectedTreasure()));
 				//map.showLocalMap();
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 				break;
 			case WON:
 				System.out.println(playerInformation.getFirstName() + " won the game " + gameID.getId());

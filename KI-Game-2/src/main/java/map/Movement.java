@@ -42,6 +42,7 @@ public class Movement {
 		this.map = map;
 		avatarLine = map.getAvatarPosition().getLine();
 		avatarColumn = map.getAvatarPosition().getColumn();
+		
 		newDestination = -1;
 		avatarPosition = avatarLine * 8 + avatarColumn;
 
@@ -143,9 +144,10 @@ public class Movement {
 		hasBeenVisited[newDestination] = true;
 
 		moveAvatar(newDestination);
-		avatarLine = map.getAvatarPosition().getLine();
-		avatarColumn = map.getAvatarPosition().getColumn();
-		map.getField(avatarLine, avatarColumn).setBeenVisited();
+		/* avatarLine = map.getAvatarPosition().getLine(); */
+		/* avatarColumn = map.getAvatarPosition().getColumn(); */
+
+		System.out.println ("Move: " + avatarLine + "/" + avatarColumn + " " + newDestination / 8 + "/" + newDestination % 8);
 		return serverMoveValue(newDestination);
 	}
 
@@ -156,6 +158,11 @@ public class Movement {
 
 		/* find way to destination */
 		/* direct way ? */
+		
+		if ((from < 0) | (from > 7))
+			return -1;
+		if ((to < 0) | (to > 7))
+			return -1;
 
 		if (graph[from][to] > 0) {
 			/* yes, move there */
@@ -338,15 +345,17 @@ public class Movement {
 
 		int newLine = newPosition / 8;
 		int newColumn = newPosition % 8;
+		
+		System.out.println("From (X/Y) " + avatarColumn + "/" + avatarLine + " to " + newColumn + "/" + newLine);
 
 		if ((newLine - avatarLine) > 0)
-			return MoveValues.LEFT;
+			return MoveValues.DOWN;
 		if ((newLine - avatarLine) < 0)
+			return MoveValues.UP;
+		if ((newColumn - avatarColumn) > 0)
 			return MoveValues.RIGHT;
 		if ((newColumn - avatarColumn) > 0)
-			return MoveValues.DOWN;
-		if ((newColumn - avatarColumn) > 0)
-			return MoveValues.UP;
+			return MoveValues.LEFT;
 
 		return null;
 	}

@@ -78,7 +78,7 @@ public class LocalMap {
 				}
 			}
 
-		if ((mountainCount < 3) || (waterCount < 4) || (grassCount < 15))
+		if ((mountainCount < 3) | (waterCount < 4) | (grassCount < 15))
 			return false;
 		
 		/* Find islands */
