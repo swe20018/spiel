@@ -12,7 +12,6 @@ public class LocalMap {
 	private Field[][] field;
 	private Position avatarPosition;
 
-
 	private Position castlePosition;
 	private Position treasurePosition;
 	private Position firstEnemyPosition;
@@ -80,10 +79,10 @@ public class LocalMap {
 
 		if ((mountainCount < 3) | (waterCount < 4) | (grassCount < 15))
 			return false;
-		
+
 		/* Find islands */
 
-		for (int line = 0; line < 8; line++)
+		for (int line = 0; line < 8; line++) {
 			for (int column = 0; column < 8; column++) {
 
 				if ((field[line][column].getType() == Terraintype.MOUNTAIN)
@@ -124,6 +123,31 @@ public class LocalMap {
 					}
 				}
 			}
+		}
+
+		/* find diagnoal water-lines */
+
+		for (int column = 0; column < 8; column++) {
+			if (field[0][column].getType() == Terraintype.WATER) {
+
+				if ((field[1][max(0, column - 1)].getType() == Terraintype.WATER)
+						|| (field[1][column].getType() == Terraintype.WATER)
+						|| (field[1][min(7, column + 1)].getType() == Terraintype.WATER)) {
+
+					if ((field[2][max(0, column - 1)].getType() == Terraintype.WATER)
+							|| (field[2][column].getType() == Terraintype.WATER)
+							|| (field[2][min(7, column + 1)].getType() == Terraintype.WATER)) {
+		
+						if ((field[3][max(0, column - 1)].getType() == Terraintype.WATER)
+								|| (field[3][column].getType() == Terraintype.WATER)
+								|| (field[3][min(7, column + 1)].getType() == Terraintype.WATER)) {
+									
+							return false;
+						}
+					}
+				}
+			}
+		}
 
 		return true;
 	}
@@ -137,8 +161,8 @@ public class LocalMap {
 	public void generateHalfMap(int initLine) {
 
 		/* initialize with GRASS */
-		
-		for (int line = initLine ; line < initLine + 4; line++)
+
+		for (int line = initLine; line < initLine + 4; line++)
 			for (int column = 0; column < 8; column++)
 				field[line][column].setType(Terraintype.GRASS);
 
@@ -195,31 +219,32 @@ public class LocalMap {
 
 		/* top line */
 		for (int column = 0; column < 8; column++) {
-			System.out.print ("+------");
+			System.out.print("+------");
 		}
 		System.out.println("+");
-		
+
 		for (int line = 0; line < 8; line++) {
 			for (int column = 0; column < 8; column++) {
-					System.out.print ("|" + field[line][column].showField());
+				System.out.print("|" + field[line][column].showField());
 			}
 			System.out.println("|");
 			/* between and finishing line */
 			for (int column = 0; column < 8; column++) {
-				System.out.print ("+------");
+				System.out.print("+------");
 			}
 			System.out.println("+");
 		}
 
 		return;
 	}
-	
+
 	/**
-	 * when treasure found, it is necessary to walk around again, even where I have been already
+	 * when treasure found, it is necessary to walk around again, even where I have
+	 * been already
 	 */
-	
+
 	public void clearVisitState() {
-		
+
 		for (int line = 0; line < 8; line++)
 			for (int column = 0; column < 8; column++)
 				field[line][column].setNotBeenVisited();
@@ -252,7 +277,7 @@ public class LocalMap {
 	public Field getField(int line, int column) {
 		return field[line][column];
 	}
-	
+
 	/**
 	 * @param field
 	 *            the field to set
@@ -262,7 +287,7 @@ public class LocalMap {
 	public void setField(int line, int column, Field field) {
 		this.field[line][column] = field;
 	}
-	
+
 	/**
 	 * @return the castlePosition
 	 */
@@ -292,6 +317,7 @@ public class LocalMap {
 	public void setTreasurePosition(Position treasurePosition) {
 		this.treasurePosition = treasurePosition;
 	}
+
 	/**
 	 * @return the avatarPosition
 	 */
@@ -300,11 +326,13 @@ public class LocalMap {
 	}
 
 	/**
-	 * @param avatarPosition the avatarPosition to set
+	 * @param avatarPosition
+	 *            the avatarPosition to set
 	 */
 	public void setAvatarPosition(Position avatarPosition) {
 		this.avatarPosition = avatarPosition;
 	}
+
 	/**
 	 * @return the enemyPosition
 	 */
@@ -313,7 +341,8 @@ public class LocalMap {
 	}
 
 	/**
-	 * @param enemyPosition the enemyPosition to set
+	 * @param enemyPosition
+	 *            the enemyPosition to set
 	 */
 	public void setFirstEnemyPosition(Position firstEnemyPosition) {
 		this.firstEnemyPosition = firstEnemyPosition;

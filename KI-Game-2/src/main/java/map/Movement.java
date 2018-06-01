@@ -42,54 +42,14 @@ public class Movement {
 		this.map = map;
 		avatarLine = map.getAvatarPosition().getLine();
 		avatarColumn = map.getAvatarPosition().getColumn();
-		
+
 		newDestination = -1;
 		avatarPosition = avatarLine * 8 + avatarColumn;
 
 		/* build graph */
 
-		if (null == graph) {
-
-			graph = new int[64][64];
-
-			for (int line = 0; line < 8; line++) {
-				for (int column = 0; column < 8; column++) {
-
-					for (int l = -1; l < 2; l++) {
-						for (int c = -1; c < 2; c++) {
-							if ((l == c) || (l == -c)) {
-								/* diagonal */
-								continue;
-							}
-
-							int from = (line * 8) + column;
-							int to = ((line + l) * 8) + column + c;
-
-							if (!isPositionOk(line + l, column + c))
-								continue;
-
-							switch (map.getField(line + l, column + c).getType()) {
-							case WATER:
-							case EMPTY:
-								/* Cannot go there */
-								graph[from][to] = 0;
-								break;
-							case MOUNTAIN:
-								/* hard to go there */
-								graph[from][to] = 2;
-								break;
-							case GRASS:
-								/* easy to go there */
-								graph[from][to] = 1;
-								break;
-							}
-
-							hasBeenVisited[from] = false;
-						}
-					}
-				}
-			}
-		}
+		if (null == graph)
+			initGraph();
 
 		map.getField(avatarLine, avatarColumn).setBeenVisited();
 
@@ -128,26 +88,28 @@ public class Movement {
 				newDestination = justMove(avatarPosition);
 				/* found new step */
 				if (newDestination < 0) {
+					
 					movingBack = true;
 					deleteLastMove();
 					newDestination = goTo(avatarPosition, getLastMove());
-
 				}
 			}
 		}
-
+		
 		/* have been everywhere, walk back */
 
 		if (!movingBack)
 			addLastMove(newDestination);
 
+		System.out.println("hasbeenvisited " + newDestination);
 		hasBeenVisited[newDestination] = true;
 
 		moveAvatar(newDestination);
 		/* avatarLine = map.getAvatarPosition().getLine(); */
 		/* avatarColumn = map.getAvatarPosition().getColumn(); */
 
-		System.out.println ("Move: " + avatarLine + "/" + avatarColumn + " " + newDestination / 8 + "/" + newDestination % 8);
+		System.out.println(
+				"Move from: " + avatarLine + "/" + avatarColumn + " to " + newDestination / 8 + "/" + newDestination % 8);
 		return serverMoveValue(newDestination);
 	}
 
@@ -158,7 +120,7 @@ public class Movement {
 
 		/* find way to destination */
 		/* direct way ? */
-		
+
 		if ((from < 0) | (from > 7))
 			return -1;
 		if ((to < 0) | (to > 7))
@@ -327,8 +289,7 @@ public class Movement {
 			map.getField(newPosition / 8, newPosition % 8).setPlayerState(PlayerStatevalues.BOTH_PLAYER_POSITION);
 		} else {
 			map.getField(newPosition / 8, newPosition % 8).setPlayerState(PlayerStatevalues.MY_POSITION);
-		}
-		return;
+		}		return;
 	}
 
 	/**
@@ -345,8 +306,6 @@ public class Movement {
 
 		int newLine = newPosition / 8;
 		int newColumn = newPosition % 8;
-		
-		System.out.println("From (X/Y) " + avatarColumn + "/" + avatarLine + " to " + newColumn + "/" + newLine);
 
 		if ((newLine - avatarLine) > 0)
 			return MoveValues.DOWN;
@@ -380,5 +339,53 @@ public class Movement {
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * Init graph when necessary
+	 * 
+	 */
+
+	private void initGraph() {
+
+		graph = new int[64][64];
+
+		for (int line = 0; line < 8; line++) {
+			for (int column = 0; column < 8; column++) {
+
+				for (int l = -1; l < 2; l++) {
+					for (int c = -1; c < 2; c++) {
+						if ((l == c) || (l == -c)) {
+							/* diagonal */
+							continue;
+						}
+
+						int from = (line * 8) + column;
+						int to = ((line + l) * 8) + column + c;
+
+						if (!isPositionOk(line + l, column + c))
+							continue;
+
+						switch (map.getField(line + l, column + c).getType()) {
+						case WATER:
+						case EMPTY:
+							/* Cannot go there */
+							graph[from][to] = 0;
+							break;
+						case MOUNTAIN:
+							/* hard to go there */
+							graph[from][to] = 2;
+							break;
+						case GRASS:
+							/* easy to go there */
+							graph[from][to] = 1;
+							break;
+						}
+
+						hasBeenVisited[from] = false;
+					}
+				}
+			}
+		}
 	}
 }

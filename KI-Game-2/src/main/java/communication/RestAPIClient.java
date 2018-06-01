@@ -208,7 +208,7 @@ public class RestAPIClient {
 				field.setFortState(node.getFortState());
 				field.setTreasureState(node.getTresureState());
 				field.setPlayerState(node.getPlayerPositionState());
-				/* System.out.println("X/line: " + line + " Y/column " + column + " : " + field.showField()); */
+				System.out.println("Y/line: " + line + " X/column " + column + " : " + field.showField());
 				
 				/* Save some interesting positions */
 				switch (field.getPlayerState()) {
