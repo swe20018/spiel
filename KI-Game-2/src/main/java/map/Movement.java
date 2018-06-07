@@ -12,6 +12,7 @@ public class Movement {
 	private int avatarColumn; /* column ... */
 	private int newDestination;
 	private int avatarPosition;
+	private int lastMove;	/* last move, cannot trust the server */
 	private LocalMap map = null; /* map where we walk */
 	private int lastMoves[]; /* to find back already walked ways - ariadne's thread */
 	private boolean movingBack = false;
@@ -24,6 +25,8 @@ public class Movement {
 		lastMoves = new int[64];
 		for (int i = 0; i < 64; i++)
 			lastMoves[i] = -1;
+		
+		lastMove = 0;
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class Movement {
 		if (null == graph)
 			initGraph();
 
-		map.getField(avatarLine, avatarColumn).setBeenVisited();
+		/* Do not trust the server! map.getField(avatarLine, avatarColumn).setBeenVisited(); */
 
 		/* idea behind moving: Go everywhere */
 		if (hasCollectedTreasure) {
@@ -102,6 +105,11 @@ public class Movement {
 			addLastMove(newDestination);
 
 		System.out.println("hasbeenvisited " + newDestination);
+		
+		if (-1 == newDestination) {
+			newDestination = lastMove;	/* cannot trust the server */
+		}
+
 		hasBeenVisited[newDestination] = true;
 
 		moveAvatar(newDestination);
@@ -110,6 +118,7 @@ public class Movement {
 
 		System.out.println(
 				"Move from: " + avatarLine + "/" + avatarColumn + " to " + newDestination / 8 + "/" + newDestination % 8);
+		lastMove = newDestination;
 		return serverMoveValue(newDestination);
 	}
 
@@ -282,7 +291,7 @@ public class Movement {
 			map.getField(avatarLine, avatarColumn).setPlayerState(PlayerStatevalues.NO_PLAYER_PRESENT);
 		}
 
-		map.setAvatarPosition(new Position(newPosition / 8, newPosition % 8));
+		/* do not trust the server map.setAvatarPosition(new Position(newPosition / 8, newPosition % 8)); */
 		/* set new Position */
 		if (PlayerStatevalues.ENEMY_PLAYER_POSITION == map.getField(newPosition / 8, newPosition % 8)
 				.getPlayerState()) {
